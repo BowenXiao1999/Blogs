@@ -24,6 +24,14 @@ A: 主要是从工业实际运行的稳定性上考虑的。虽然分布式系�
 
 
 
+### Q: 假设某个Follower节点出现网络分区，由于接收不到Leader的心跳包，所以会不断选举，Term会一直增加。加入原集群后会把原Leader降级为Follower，导致重新选举。但实际上它并不能成为Leader(没有最新日志)，造成disruption。如何解决？
+
+Raft作者博士论文《CONSENSUS: BRIDGING THEORY AND PRACTICE》的第9.6节 "Preventing disruptions when a server rejoins the cluster"提到了PreVote算法的大概实现思路。
+
+主要就是Prevote的思想。把选举也拆成一个两阶段提交的方式，先进行一轮prevote，这一轮prevote并不会更改自己的Term＋１，但是Vote请求里的Term是＋１的。如果收到大多数的赞成票，那么发起真正选举。否则继续等待下一轮。（好奇的是Etcd的Raft应该对Prevote票和Vote票做区分？如果Prevote投过这个Term就不能再投了，那就非常奇怪了。所以应该是区别对待的）
+
+
+
 ### Q: 假设Ａ, B, C三节点，A为Leader。A和B之间出现分区，但是A, C和B, C之间连接不受影响，会导致Leader频繁切换，有什么方法优化？
 
 A, B, C三节点，只有A和B之间的网络不通，而C是可以和A, B 连通的，有什么办法优化？由于Leader A和B无法连通，B会选举成为新Leader (C 会投给它)。同时Leader A的心跳包会被拒绝，降级为Follower(因为Term的原因)。过一段时间后，A也会经历一样的过程，选举成为Leader，B降级为Follower，如此反复。
