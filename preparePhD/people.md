@@ -12,3 +12,10 @@
 * Xiaowei Jiang: https://www.linkedin.com/in/xiaoweij/ 
 
 
+* CUHK: James Chen, Patrick
+* HKU: Heming Cui
+* HKUST: Database Research Group
+* NUS (Database Research Group): Yingjun Wu (https://www.comp.nus.edu.sg/~tankl/)
+* NTU (DANTE): 
+
+
