@@ -25,7 +25,10 @@ Percolator非常巧妙，通过区分primary key和secondary key，把最终comm
 
 ## D 持久性
 持久性代表数据库容错的能力，主要的实现手段可以分情况讨论（硬盘有无损坏）。
-1. 假设硬盘无损坏：正常事务，写内存和WAL即可。这里多讲一下WAL。很多人可能觉得是先写WAL，然后再写内存，其实不是的。WAL应该和内存写是互相异步的。以MySQL举例，BEGIN之后，执行器调用存储引擎接口把数据拿到内存里计算，同时写WAL。众所周知，MySQL一般要写redo log 和 binlog 2种日志。写binlog是先写到buffer里，然后事务COMMIT的时候刷盘。写redo log也差不多，prepare的时候写进buffer。两者不同的点在于binlog是必须要一次性写入的，而redo log是有后台线程在不断刷磁盘，所以日志不连续。但是不过如果设置nnodb_flush_log_at_trx_commit = 1，那么prepare的时候就不仅仅要写Buffer，还要做持久化。这样的话，最终等Binlog写完后，redo log不用再强制持久化一次（更改COMMIT状态）。
+1. 假设硬盘无损坏：正常事务，写内存和WAL即可。
+
+这里多讲一下WAL。很多人可能觉得是先写WAL，然后再写内存，其实不是的。
+WAL应该和内存写是互相异步的。以MySQL举例，BEGIN之后，执行器调用存储引擎接口把数据拿到内存里计算，同时写WAL。众所周知，MySQL一般要写redo log 和 binlog 2种日志。写binlog是先写到buffer里，然后事务COMMIT的时候刷盘。写redo log也差不多，prepare的时候写进buffer。两者不同的点在于binlog是必须要一次性写入的，而redo log是有后台线程在不断刷磁盘，所以日志不连续。但是不过如果设置nnodb_flush_log_at_trx_commit = 1，那么prepare的时候就不仅仅要写Buffer，还要做持久化。这样的话，最终等Binlog写完后，redo log不用再强制持久化一次（更改COMMIT状态）。
 
 2. 假设硬盘损坏：
 a. 单体自带的复制，比如Mysql主从复制
