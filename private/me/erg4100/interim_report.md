@@ -53,7 +53,8 @@ The first task is to complete the translation of English comments in the code. T
 The second job is more important and is about security. Tik Tok Live has an anchor signing function, which requires the anchor’s identity information to be uploaded to the server. However, due to historical reasons, the uploaded information is not particularly well protected. I studied the logic and at the same time studied a front-end encryption solution to solve this problem. Finally, the upload information uses the AES256 encryption algorithm, and the obfuscation technology is added to the front end to increase the difficulty of destruction.
 
 The third job is about performance optimization. At that time, the first screen performance of Tik Tok's live broadcast related pages was not very good, and there was a big gap compared with domestic Douyin. So a colleague and I were assigned to improve display performance. We tried many solutions, such as loading fonts asynchronously and deleting redundant resources in the project. In the end, we got better results, and the technical solutions were also shared with other colleagues.
-## Your plan of second half of t
+
+## Your plan of second half of internship
 
 ## Others
 This internship experience in an Internet company is very important to me. It proves that I have the ability to work in a large company, and it also allows me to know how to plan my career path.
