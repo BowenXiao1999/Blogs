@@ -5,3 +5,8 @@
 Andiry Xu: 
 
 Lin Yin database PhD: https://niceirene.github.io/
+
+Xinda Wei: https://ipads.se.sjtu.edu.cn/zh/pub/members/xingda_wei/
+
+Yunhao Zhang: https://dolobyte.net/index.html#research
+
