@@ -37,5 +37,58 @@ Join的比较频繁的2个Region，是不是一般放到一起比较好？
 2. 软件冗余（多副本，两地三中心，异地多活，数据复制）
 3. 自动诊断，预测（用机器学习的办法来监控数据库应用的情况）
 
+## 硬件
 
+### CPU
+单核能力提升不大，不过数量越来越多（VLDB 2017），性能下降，争抢
+SMP（共享一块内存）
+NUMA（解决多核的并发任务）
+Wait-free
+重核的并发控制
+
+### 内存
+
+Ｂ树(CacheLine) + 锁Page
+Pavlo(inmemory index)
+
+### Disk-NVM
+PCM
+SRAM
+DRAM
+Xpoint
+NAND
+ByteAddressable
+Intel出的NVM(Optane)
+
+Page->Record
+Log Index 哪些放在NVM　
+架构(DRAM, NVM, DISK)
+WBL
+NVM让RTO更短，Index查找更快
+
+### Network
+RDMA，直接访问对方内存(Bypass CPU)
+对于2PC的设计影响非常大
+在网卡层面做过滤，不要CPU上做判断
+新的协议
+
+
+## Deployment 
+降低I/O，页面转到内部
+存储计算解耦，分层扩容
+一写多读
+
+* Nead Data Processing
+* 支持多写（Aurora)
+* 内存虚拟化，把内存做高可用，通过RDMA
+
+### 自治数据库
+AI4DB(DBA)
+DB4AI()
+
+### 安全和隐私
+
+## Data Model
+Time Series
+Graph
 
