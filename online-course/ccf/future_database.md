@@ -67,10 +67,9 @@ WBL
 NVM让RTO更短，Index查找更快
 
 ### Network
-RDMA，直接访问对方内存(Bypass CPU)
-对于2PC的设计影响非常大
-在网卡层面做过滤，不要CPU上做判断
-新的协议
+RDMA，直接访问对方内存(Bypass CPU)。这项技术是分布式领域非常关键的技术，它对于2PC的设计有着非常深远的影响。计算数据能在网卡层面做过滤，而不需要中断CPU进行参与。
+
+新的网络协议（QPCK，HTTP 2）给需要频繁RPC的分布式数据库提供了新的机遇。
 
 
 ## Deployment 
@@ -78,13 +77,18 @@ RDMA，直接访问对方内存(Bypass CPU)
 
 云原生数据库有几个研究点: 
 
-* Nead Data Processing
-* 支持多写（Aurora)
-* 内存虚拟化，把内存做高可用，通过RDMA连接。
+* Nead Data Processing。既然存储计算完全分离，这会加重一些新的问题，比如查询得到的大量数据，如果不在存储层进行处理，而是全部传输给计算节点，这会极大地浪费网络I/O。因此，现在计算分离的架构里面，通常都会有模块做算子的下推。TiKV里负责下推的是Coprocessor模块。这方面的难点是，底层的KV存储没有完整的关系表信息，因此在做一些优化的时候无能为力。
+
+
+* 支持多写。在云原生数据库里支持多写是比较难的一件事情，比如Aurora就不支持。新的PolarDB是支持的
+
+
+* 内存虚拟化，把内存做高可用，通过RDMA连接。这个可以联想到PolarDB 1.0。
 
 
 
 ## Data Model
-Time Series
-Graph
+Time Series　(时空系列数据库)
+
+Graph （图数据库）
 
