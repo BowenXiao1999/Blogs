@@ -52,19 +52,15 @@ Wait-free
 Pavlo(inmemory index)
 
 ### Disk-NVM
-PCM
-SRAM
-DRAM
-Xpoint
-NAND
-ByteAddressable
-Intel出的NVM(Optane)
+之前的存储器叫闪存，flash memory。闪存分很多种，其中一种叫做NAND闪存，NAND Flash在U盘，存储卡，固态硬盘上都可以看到。U盘和SSD是加了控制器的闪存，而影响闪存速度的是控制器的性能，比如SSD性能高于U盘，主要靠的不是闪存的速度而是控制器的实现。
 
-Page->Record
-Log Index 哪些放在NVM　
-架构(DRAM, NVM, DISK)
-WBL
-NVM让RTO更短，Index查找更快
+SRAM和DRAM的区别大家都清楚。SRAM是用锁存来存储信息，不需要刷新。DRAM是用电容电荷来存储。PCM指的是Phase-Change Memory，中文是相变化存储器，是一种非易失性存储器。
+
+3D Xpoint就是一种NVM技术，Intel基于这个技术提出了Optane，美光科技提出了QuantX。而且是ByteAddressable的
+
+之前由于磁盘的读取方式问题，数据库在设计数据结构的时候，也有一些兼容性的设计。比如B-Tree的每个节点是一个Page。这样其实会带来一些问题，比如并发控制怎么做？总不能写一条Record一个Page都被锁住。现在ByteAddressable类磁盘的出现，也让我们开始思考抛弃Page的设计，直接存Record是不是一种方案？（Page->Record）而且因为NVM的出现，我们也可以思考存储器的架构，比如Memory -> NVM -> Disk这样新的存储架构，带来新的思考点：为了保证读写效率，我数据库的Log要放在哪个位置？Index要放在哪个位置？传统的Write Ahead Log是不是要换成Write Back Log。
+
+新的硬件也带来了性能上的提升。NVM让RTO更短，恢复数据更快，Index表查找更快。
 
 ### Network
 RDMA，直接访问对方内存(Bypass CPU)。这项技术是分布式领域非常关键的技术，它对于2PC的设计有着非常深远的影响。计算数据能在网卡层面做过滤，而不需要中断CPU进行参与。
