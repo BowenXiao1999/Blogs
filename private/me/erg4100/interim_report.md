@@ -55,6 +55,7 @@ The second job is more important and is about security. Tik Tok Live has an anch
 The third job is about performance optimization. At that time, the first screen performance of Tik Tok's live broadcast related pages was not very good, and there was a big gap compared with domestic Douyin. So a colleague and I were assigned to improve display performance. We tried many solutions, such as loading fonts asynchronously and deleting redundant resources in the project. In the end, we got better results, and the technical solutions were also shared with other colleagues.
 
 ## Your plan of second half of internship
+After having experience in Web development, I find my true love in database system development. If I have second half of internship, I want to transfer to infrastructure department and do database kernel development.
 
 ## Others
 This internship experience in an Internet company is very important to me. It proves that I have the ability to work in a large company, and it also allows me to know how to plan my career path.
