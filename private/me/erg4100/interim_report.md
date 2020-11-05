@@ -12,6 +12,8 @@ ByteDance's platforms aim to help users explore and discover the world's creativ
 ## internship position description
 As for the internship position, I pciked up Front-end Web Developer as my first target. Let me quota the part of the requirements below: 
 
+![1604307915784](/tmp/1604307915784.png)
+
 Team introduction: The R&D department of Mutual Entertainment is responsible for the research and development of various star products such as Douyin, Douyin Volcano, live broadcast, music, and video. As of January 2020, Douyin Daily Active (DAU) has exceeded 400 million and continues to maintain a high speed increase. Join us, you will support including but not limited to the research and development of the above products and related architecture work, each line of code can serve hundreds of millions of users.
 
 
@@ -57,5 +59,5 @@ The third job is about performance optimization. At that time, the first screen 
 ## Your plan of second half of internship
 After having experience in Web development, I find my true love in database system development. If I have second half of internship, I want to transfer to infrastructure department and do database kernel development.
 
-## Others
+## Conclusion
 This internship experience in an Internet company is very important to me. It proves that I have the ability to work in a large company, and it also allows me to know how to plan my career path.
