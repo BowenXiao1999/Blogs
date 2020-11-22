@@ -21,4 +21,46 @@ https://www.zhihu.com/question/19883454/answer/28274134。
 
 这里其实Pavlo也就提了一嘴，以后有空再研究。
 
-## 
+## Partition/Sharding
+这一章Pavlo行文思路是：分布式数据库引出了数据Partition，数据Partition带来了分布式事务和分布式查询，这些都是早就有了的概念。那NewSQL新在哪里呢？
+
+### Why Sharding?
+为什么要Sharding？因为我们当前的OLTP应用形态决定的。举例，我们可以把同一个顾客的信息，他的订单历史，账户信息通过Sharding的方式放在一台节点上，避免网络开销。如果我们做不到这点的话，分布式事务带来的开销可能让分布式数据库的推行难上加难。
+
+### Heterogenous Architecture
+为了保证分布式系统的可扩展性，我们在添加节点的时候，不希望re-partition整个数据库。
+
+有一帮人搞出了heterogeneous，比如NuoDB。NuoDB里有2种节点，storage managers (SM) 和 transaction engines (TEs)。SM只有存储能力没有计算能力，TE是维护分片的内存缓存。当查询来临时，某个TE负责从其他TE/SM处获取数据。同时用了load-balancing的技巧，所以一起使用的数据经常放在同一台TE上。
+
+相似的还有MemSQL，两者的区别在于“如何减少查询时从storage node带来的计算量”。NuoDB通过在TE维护缓存来做到这点，但是这样来看TE就不是无状态的了。而MemSQL通过算子下推（或者叫Near Data Processing）来减少。
+
+读完后，我想这不就是计算和存储分离嘛？我是比较支持MemSQL这种架构的，感觉存储层下推部分计算是趋势。
+
+### Live Migration
+NewSQL比较新的一个feature就是它能做到partition的live migration。第一种方式是粗粒度的"vitural partitions"（没读明白），第二种通过细粒度的range partition（比如PD in TiDB）。
+
+## Concurrency Control (CC)
+Pavlo总结说这个领域没什么新意了，看来千万不要作死往这个领域做。
+
+首先最早实现CC的就是靠锁，比如2PL。但是这带来了很多问题，比如要怎么处理死锁。
+
+由于处理死锁带来的复杂度，人们开始提出新的CC协议，出现了TO(Timestamp Ordering)，这种架构往往意味着分布式MVCC，在CRDB, HANA等新型数据库里很常见。对发号器的要求也非常高。基本不需要处理死锁，即使update同一个tuple事务也不一定会冲突（冲突了回滚就行）。这里来分析一下CRDB是怎么做的。
+
+
+
+
+但更多，更经典的还是2PL + MVCC的结合。最著名的就是InnoDB了。但这里面Spanner是特立独行的存在，因为GPS和原子钟的高度精确性，它能保证非常强的一致性。
+
+* Distributed 2PL怎么做到？
+* Distributed MVCC怎么做到？
+* 拿锁是要去lock manager拿嘛？
+
+## Secondary Indexes
+
+
+## Replication
+
+
+## Crash Recovery
+
+## Future Trends
