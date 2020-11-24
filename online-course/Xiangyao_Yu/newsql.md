@@ -74,7 +74,14 @@ Clustrix是一种two-layered的实现。首先一层是replication的数据，�
 
 ## Replication
 
+数据冗余是分布式数据库提供高可用和高容错率的常用手段之一。Newsql往往把这种特性隐藏起来，不需要用户有额外的心智负担。Newsql为了达到副本数据的高度一致性（可能为了只读副本的查询），往往必须忍受2PC带来的网络开销。Nosql提供的较低级别的一致性，也正是为了躲避Replication这个老大难的问题。这些都是老生常谈了。
+
+总的来说，Replication有2种方式: 一种是Active-Active，即所有副本同时并行地执行Query，同时达到下一个状态。一种是Active-Passive，master执行完后把结果状态传递给replica节点进行同步。大部分Newsql都是第二种，因为第一种太理想化，需要使用确定性的并发控制算法。而大部分DBMS没有办法做到每个Query在不同节点上的查询是完全same order的。
+
+当然，也有实现了确定性并发控制算法的DBMS(...)，至于怎么实现的，留个坑之后研究。
 
 ## Crash Recovery
+
+
 
 ## Future Trends
