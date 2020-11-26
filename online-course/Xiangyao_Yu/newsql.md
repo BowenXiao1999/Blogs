@@ -82,6 +82,14 @@ Clustrix是一种two-layered的实现。首先一层是replication的数据，�
 
 ## Crash Recovery
 
+Newsql的Crash Recovery比传统的单机数据库相比，除了要保证数据不丢失，还要尽可能地减少down time。Master挂了之后，除了要load checkpoint and WAL from local storage，还要pull new logs starting from new master。这种实现一般是physical的log，因为只有这样同步起来才会比run sql要快很多。
 
+感觉这一部分也是老生常谈。
 
 ## Future Trends
+
+看看Pavlo在16年是怎么预测的。他觉得随着IT业的发展，数据特点也在变化。现在的数据更加讲究时效性，越新的数据越有分析价值。因此他觉得HTAP + Online Analytics的方式是主流。他相当看衰big OLAP 仓库，觉得它们的末日马上就要来了，以后公司会把TP和AP请求跑在同一台数据库上。然后顺带分析了一下HTAP的实现，大概就是3种。
+
+1. Deploy 2套数据库，通过CDC或者ETL update数据，delay以分钟甚至小时计算。
+2. Lambda架构，一套batch processing system + 一套stream processing system
+3. 一套HTAP，融合TP技术(lock free, in-memory storage)和AP技术(column store, vectorized execution)
