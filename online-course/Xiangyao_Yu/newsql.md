@@ -9,7 +9,7 @@
 
 由于科技的进步，现在通过把所有数据库的所有数据放进main memory成了现实。尽管如此，我还不是不太相信仅凭内存就能实现数据库的所有功能，只不过现在的设计方向从disk-oriented转移到了memory-oriented。
 
-对于memory-oriented的数据库，一个比较难的问题是：如何handle大于当前内存的数据库（俗称Large than memory database）。这需要设计内存Evict策略，比如H-Store是用一种叫anti-caching的方式，把evicted的tuple移到disk上然后再内存对应位置插入tombstone。当要查询evicted的tuple时（也即查到tombstone标记），立刻起一个线程去disk上搬回来。这样的麻烦之处在于：还是要是用某种tracking算法来决定哪些数据应该被evicted并且已经被evicted（这不就是buffer pool manager嘛。。）。
+对于memory-oriented的数据库，一个比较难的问题是：如何handle大于当前内存的数据库（俗称Larger than memory database）。这需要设计内存Evict策略，比如H-Store是用一种叫anti-caching的方式，把evicted的tuple移到disk上然后再内存对应位置插入tombstone。当要查询evicted的tuple时（也即查到tombstone标记），立刻起一个线程去disk上搬回来。这样的麻烦之处在于：还是要是用某种tracking算法来决定哪些数据应该被evicted并且已经被evicted（这不就是buffer pool manager嘛。。）。
 
 EPFL有个小组用OS的Virtual Paging的方式（做在了VoltDB）来做上面说的这个tracking工作。我的理解是避免了重复造轮子，应用了OS那一套东西（但是感觉越高效的数据库越应该抛弃OS...）。
 
@@ -46,18 +46,18 @@ NewSQL比较新的一个feature就是它能做到partition的live migration。�
 ## Concurrency Control (CC)
 Pavlo总结说这个领域没什么新意了，看来千万不要作死往这个领域做。
 
-首先最早实现CC的就是靠锁，比如2PL。但是这带来了很多问题，比如要怎么处理死锁。
+首先最早实现CC的就是靠锁，比如2PL。但是这带来了很多问题，比如要怎么处理死锁，而且效率也比较低。
 
-由于处理死锁带来的复杂度，人们开始提出新的CC协议，出现了TO(Timestamp Ordering)，这种架构往往意味着分布式MVCC，在CRDB, HANA等新型数据库里很常见。个人觉得对发号器的要求也非常高。基本不需要处理死锁，即使update同一个tuple事务也不一定会冲突（冲突了回滚就行）。这里来分析一下CRDB是怎么做的。
+由于处理死锁带来的复杂度，人们开始提出新的CC协议，出现了TO(Timestamp Ordering)，这种架构往往意味着分布式MVCC，在CRDB, HANA等新型数据库里很常见。个人觉得对发号器的要求也非常高。基本不需要处理死锁，即使update同一个tuple事务也不一定会冲突（冲突了回滚就行）。“只要比较数据的写入时间戳（即写入该数据的事务的提交时间戳）和 Snapshot 的读时间戳，即可判断出可见性。”
 
 
-但更多数据库使用的CC算法，还是2PL + MVCC的结合。最著名的就是InnoDB了。但这里面Spanner是特立独行的存在，因为其他所有数据库都只能从软件上去设计CC，但是谷歌能从硬件上做文章。
+但更多数据库使用的CC算法，还是2PL + MVCC的结合。最著名的就是InnoDB了。但这里面Spanner是特立独行的存在，因为其他所有数据库都只能从软件上去设计CC，但是谷歌能从硬件上做文章。但是这种一般都是依靠GTM（Global Transaction Manager）。GTM是个比TSO (Time Stamp Oracle) 难处理的单点问题，所以TiDB没有选择GTM，也因此导致了它在某些事务可见性上的设计和MySQL不同，以及不能完全兼容MySQL。
 
-* Distributed 2PL怎么做到？
-* Distributed MVCC怎么做到？
-* 拿锁是要去lock manager拿嘛？
 
 还有一种比较新型的算法是VoltDB使用的。它保证每个Partition同时只有一个事务在进行处理。这是通过TO + 单线程来实现的。通过TO，对待处理事务进行排序，**一个个执行**。由于只有一个事务执行，因此不必担心锁冲突的问题，速度很快。但是很明显，这样做是不太对的：当你的事务span多个partition的时候，任意时刻只有一个partition会工作，其他都会被你当前事务锁住而无法处理其他的事务。
+
+对于CC，个人觉得Eric Fu这篇文章讲的很好，我搬运下
+https://ericfu.me/timestamp-in-distributed-trans/
 
 ## Secondary Indexes
 二级索引在单机情况下很好支持，因为它只有一个节点，但是在分布式的情况下却难了。
