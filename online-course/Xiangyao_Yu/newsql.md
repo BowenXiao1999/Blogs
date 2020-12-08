@@ -56,7 +56,7 @@ Pavlo总结说这个领域没什么新意了，看来千万不要作死往这个
 
 还有一种比较新型的算法是VoltDB使用的。它保证每个Partition同时只有一个事务在进行处理。这是通过TO + 单线程来实现的。通过TO，对待处理事务进行排序，**一个个执行**。由于只有一个事务执行，因此不必担心锁冲突的问题，速度很快。但是很明显，这样做是不太对的：当你的事务span多个partition的时候，任意时刻只有一个partition会工作，其他都会被你当前事务锁住而无法处理其他的事务。
 
-对于CC，个人觉得Eric Fu这篇文章讲的很好，我搬运下
+对于CC，个人觉得@Eric Fu这篇文章讲的很好，我搬运下
 https://ericfu.me/timestamp-in-distributed-trans/
 
 ## Secondary Indexes
@@ -80,7 +80,11 @@ Clustrix是一种two-layered的实现。首先一层是replication的数据，�
 
 总的来说，Replication有2种方式: 一种是Active-Active，即所有副本同时并行地执行Query，同时达到下一个状态。一种是Active-Passive，master执行完后把结果状态传递给replica节点进行同步。大部分Newsql都是第二种，因为第一种太理想化，需要使用确定性的并发控制算法。而大部分DBMS没有办法做到每个Query在不同节点上的查询是完全same order的。
 
-当然，也有实现了确定性并发控制算法的DBMS(...)，至于怎么实现的，留个坑之后研究。
+当然，也有实现了确定性并发控制算法的DBMS (AkA Deterministic DBMS)，至于怎么实现的，留个坑之后研究。其实这引出了一个本质问题：为什么数据库需要共识算法？因为数据库没办法保证从一个状态执行相同的Query能共同到达下一个状态。Deterministic DBMS就是为此而生的：减少Agreement Protocol （譬如通常的 two-phase commit）的使用。
+
+> Calvin 是一个 deterministic database，也就是说，对于需要处理的事务，Calvin 会在全局确定好事务的顺序，并按照这个顺序执行。这些事务的执行顺序，我们可以认为是一个全局的有序 log，并且 Calvin 会通过复制机制来备份到不同的副本上面。所有的副本都是可以并行的顺序执行这些 log 的。这样，即使一个副本当掉，另外副本也仍然能执行并且 commit 事务。
+
+感觉就是实现了一个中间件，这个中间件是一个事务调度器，能在事务开始前给每个副本定下一个执行的log，使得所有的副本能并发的执行。
 
 ## Crash Recovery
 
@@ -98,3 +102,7 @@ Newsql的Crash Recovery比传统的单机数据库相比，除了要保证数据
 
 ## 总结
 我认为如果以数据库从业者的角度来看的话，这篇文章的价值不大，当然，我这里没法从2016年的角度去思考。有很多分布式数据库的设计在现在看来都是很正常的，不过在当时应该是一篇不错的综述了。
+
+## Ref
+https://blog.csdn.net/Gexrior/article/details/80917508
+
