@@ -23,7 +23,7 @@ memory-oriented数据库要减少memory使用量，这需要比较好的tracking
 
 https://www.zhihu.com/question/19883454/answer/28274134。
 
-所以说难怪比较难看到纯TP的Main-Memory数据库，因为只有行存才能保证操作效率，但是行存又不好压缩。其实Pavlo也就提了一嘴，以后有空再研究。
+所以说难怪比较难看到纯TP的Main-Memory数据库，因为只有行存才能保证TP的操作效率，但是行存又不好压缩，导致内存占用率高。其实Pavlo也就提了一嘴，以后有空再研究。
 
 ## Partition/Sharding
 这一章Pavlo行文思路是：分布式数据库引出了数据Partition，数据Partition带来了分布式事务和分布式查询，这些都是早就有了的概念。那NewSQL新在哪里呢？分几个小节来谈一下。
@@ -41,7 +41,7 @@ https://www.zhihu.com/question/19883454/answer/28274134。
 读完后，我想这不就是计算和存储分离嘛？我是比较支持MemSQL这种架构的，感觉存储层下推部分计算是趋势。
 
 ### Live Migration
-NewSQL比较新的一个feature就是它能做到partition的live migration。第一种方式是粗粒度的"vitural partitions"（没读明白），第二种通过细粒度的range partition（比如PD in TiDB）。
+NewSQL比较新的一个feature就是它能做到partition的live migration。第一种方式是粗粒度的"vitural partitions"（没读明白），第二种通过细粒度的range partition（比如PD in TiDB？）。
 
 ## Concurrency Control (CC)
 Pavlo总结说这个领域没什么新意了，看来千万不要作死往这个领域做。
