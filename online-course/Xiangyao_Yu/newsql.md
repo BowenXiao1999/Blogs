@@ -41,7 +41,7 @@ https://www.zhihu.com/question/19883454/answer/28274134。
 读完后，我想这不就是计算和存储分离嘛？我是比较支持MemSQL这种架构的，感觉存储层下推部分计算是趋势。
 
 ### Live Migration
-NewSQL比较新的一个feature就是它能做到partition的live migration。第一种方式是粗粒度的"vitural partitions"（没读明白），第二种通过细粒度的range partition（比如PD in TiDB？）。
+NewSQL比较新的一个feature就是它能做到partition的live migration。第一种方式是粗粒度的"vitural partitions"（没读明白），第二种通过细粒度的range partition（比如PD in TiDB？）。具体没看懂有啥大区别，好像一个是Coarse-Grained，一个是Fine-Grained (Tuples)，欢迎同行解答。
 
 ## Concurrency Control (CC)
 Pavlo总结说这个领域没什么新意了，看来千万不要作死往这个领域做。
