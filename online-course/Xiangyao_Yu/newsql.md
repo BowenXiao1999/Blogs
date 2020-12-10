@@ -1,6 +1,7 @@
+#! https://zhuanlan.zhihu.com/p/335262396
 # What's Really New with NewSQL
 
-这是Andy Pavlo 15年发在SIGMOD上的论文。主要是一篇综述。个人感觉这篇文章的主要亮点在于分析SOTA和对Trend一些预测，也重点读了一下这部分。
+这是Andy Pavlo 15年发在SIGMOD上的[论文](https://db.cs.cmu.edu/papers/2016/pavlo-newsql-sigmodrec2016.pdf)。主要是一篇综述。个人感觉这篇文章的主要亮点在于分析SOTA和对Trend一些预测，也重点读了一下这部分。
 
 接下来的每个英文标题的小节一般是Newsql的一种技术，会去讲Newsql在这些技术上有什么新鲜玩意。
 
@@ -17,9 +18,11 @@ memory-oriented数据库要减少memory使用量，这需要比较好的tracking
 
 后来我还搜到了，有人说main-memory的亮点不在于内存，在于column storage（比如MemSQL）。我把他的答案节选贴在这。
 
-> 1. in-memory数据库的最大卖点其实不是把数据放在内存里. 2. 最大的变化是把传统关系型数据库(RDBMS)里表的存储方式从行存储变为列存储. 列存储的好处是:
-2a. 数据的压缩率可以很大, 因为往往很多应用表里一列的数据冗余度很大
-2b. 对于OLAP系统来说, 求和, 平均等aggregation的查询在列上操作效率非常高所以列存储已经成为所有所谓in-memory数据库的标准配置
+> 
+1. in-memory数据库的最大卖点其实不是把数据放在内存里. 
+2. 最大的变化是把传统关系型数据库(RDBMS)里表的存储方式从行存储变为列存储. 列存储的好处 
+3. 数据的压缩率可以很大, 因为往往很多应用表里一列的数据冗余度很大
+4. 对于OLAP系统来说, 求和, 平均等aggregation的查询在列上操作效率非常高所以列存储已经成为所有所谓in-memory数据库的标准配置
 
 https://www.zhihu.com/question/19883454/answer/28274134。
 
