@@ -10,6 +10,8 @@ DDC 又称 Disaggregated Data Centers，是可能的下一代云计算中心的�
 2. 提升资源利用率。现在你购买云服务，很多时候美元办法做到随心所欲的定制你的配置。比如你想买个7 cores, 100 GB RAM, 3GPUs的服务，DDC能做到差不多刚好就给你这么多。但是现在如果你要在AWS上买，满足这个配置的是p3.8xlarge (32 cores, 244 GB of RAM, and 4 GPUs)。。可以对比下看看浪费了多少核心数和内存。本质问题还是没有办法缩小scale的粒度，做到精准配置资源。
 
 挑战：
-1. 如何降低通信延迟
-2. 如何应对减小的内存
+1. 如何降低通信延迟。可以预想到，在这种架构上，数据库必定涉及大量数据在计算节点和内存节点之间的转移。如何减少这部分latency？
+
+2. 如何应对越来越少的working set memory(compute node的内存)? 
+
 3. 如何设立更完备的failure机制，来应对CPU和内存的independent failure。
